@@ -12,4 +12,4 @@ import {listen} from "@colyseus/arena";
 import arenaConfig from "./arena.config";
 
 // Create and listen on 2567 (or PORT environment variable.)
-listen(arenaConfig, 3000);
+listen(arenaConfig, parseInt(process.env.PORT, 10) || 3000);
