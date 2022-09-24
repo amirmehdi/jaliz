@@ -11,14 +11,24 @@
 <body>
 <div class="w3-row">
     <div class="w3-twothird w3-container ">
-        <label for="command-type">command</label>
-        <input id="command-type" class="w3-input" type="text" placeholder="command"><br>
+        <select id="command-list" class="w3-select" name="option">
+            <option value="" disabled selected>Choose your command</option>
+            <option value="start">start</option>
+            <option value="plant">plant</option>
+            <option value="startTrading">startTrading</option>
+            <option value="makeOffer">makeOffer</option>
+            <option value="acceptOffer">acceptOffer</option>
+            <option value="deleteOffer">deleteOffer</option>
+            <option value="plant2">plant2</option>
+            <option value="harvest">harvest</option>
+            <option value="buyUtility">buyUtility</option>
+        </select>
         <label for="command-input">message</label>
         <input id="command-input" class="w3-input" type="text" placeholder="message"><br>
         <button id="command-submit" class="w3-btn w3-blue">send</button>
         <br>
 
-        <textarea id="messages" cols="50" style="width:100%"></textarea><br>
+        <textarea id="messages" rows=20 style="width:100%"></textarea><br>
     </div>
     <div class="w3-third w3-container" style="overflow: auto">
         <pre id="state"></pre>
@@ -40,7 +50,6 @@
 
         room.onMessage("*", (action, message) => {
             let text = action + ": " + message.message
-            console.log(text)
             document.querySelector('#messages').value += (text + '\n');
         })
 
@@ -50,14 +59,39 @@
             document.querySelector("#state").textContent = JSON.stringify(state, undefined, 2)
         });
 
+        function listQ() {
+            const messageInputDom = document.querySelector('#command-input');
+            switch (this.value) {
+                case "plant":
+                case "plant2":
+                    messageInputDom.value = '{"index":0, "cardId": 1, "cardCount": 1}'
+                    break
+                case "makeOffer":
+                    messageInputDom.value = '{"to": "", "receive": [], "give": []}'
+                    break
+                case "acceptOffer":
+                    messageInputDom.value = '{"offerId": ""}'
+                    break
+                case "deleteOffer":
+                    messageInputDom.value = '{"offerId": ""}'
+                    break
+                case "harvest":
+                    messageInputDom.value = '{"index": 0}'
+                    break
+                case "buyUtility":
+                    messageInputDom.value = '{"utility": "", "index": -1}'
+                    break
+                default:
+                    messageInputDom.value = ''
+                    break
+
+            }
+        }
+
+        document.getElementById("command-list").onchange = listQ;
+
         document.querySelector('#command-input').focus();
         document.querySelector('#command-input').onkeyup = function (e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#command-submit').click();
-            }
-        };
-        document.querySelector('#command-type').focus();
-        document.querySelector('#command-type').onkeyup = function (e) {
             if (e.keyCode === 13) {  // enter, return
                 document.querySelector('#command-submit').click();
             }
@@ -65,12 +99,15 @@
 
         document.querySelector('#command-submit').onclick = function (e) {
             const messageInputDom = document.querySelector('#command-input');
-            const typeInputDom = document.querySelector('#command-type');
-            const message = messageInputDom.value;
+            const typeInputDom = document.querySelector('#command-list');
+            let message = ''
+            try {
+                message = JSON.parse(messageInputDom.value);
+            } catch (e) {}
             const type = typeInputDom.value;
             room.send(type, message)
-            messageInputDom.value = '';
-            typeInputDom.value = '';
+            // messageInputDom.value = '';
+            // typeInputDom.value = '';
         };
     }).catch(e => {
         console.log("JOIN ERROR", e);

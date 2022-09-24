@@ -146,7 +146,7 @@ export class JalizRoom extends Room<State> {
         this.state.players.get(client.sessionId).connected = false;
 
         try {
-            if (consented) {
+            if (consented || !this.locked) {
                 throw new Error("consented leave");
             }
 
@@ -161,6 +161,7 @@ export class JalizRoom extends Room<State> {
             this.state.players.get(client.sessionId).connected = true;
 
         } catch (e) {
+            this.state.players.delete(client.sessionId)
             // client can't reconnect. now what we do!?
         }
     }
