@@ -27,10 +27,13 @@
 
 
 <script>
-
-    var client = new Colyseus.Client('ws://' + window.location.host);
+    var client;
+    if (location.protocol === 'https:') {
+        client = new Colyseus.Client('wss://' + window.location.host);
+    } else {
+        client = new Colyseus.Client('ws://' + window.location.host);
+    }
     var room = null
-    var lastMessage = null
     client.joinOrCreate("jaliz").then(x => {
         room = x
         console.log('room id is : ', room.id);
