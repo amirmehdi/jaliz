@@ -121,6 +121,7 @@ tmp
 
 # Editors
 .idea
+.vscode
 *.iml
 
 # OS metadata
@@ -132,3 +133,4 @@ dist/**/*
 
 # ignore yarn.lock
 yarn.lock
+lib
