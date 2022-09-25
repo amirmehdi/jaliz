@@ -50,7 +50,9 @@
 
         room.onMessage("*", (action, message) => {
             let text = action + ": " + message.message
-            document.querySelector('#messages').value += (text + '\n');
+            let textArea = document.querySelector('#messages');
+            textArea.value += (text + '\n');
+            textArea.scrollTop = textArea.scrollHeight;
         })
 
         room.onStateChange((state) => {
@@ -103,7 +105,8 @@
             let message = ''
             try {
                 message = JSON.parse(messageInputDom.value);
-            } catch (e) {}
+            } catch (e) {
+            }
             const type = typeInputDom.value;
             room.send(type, message)
             // messageInputDom.value = '';
