@@ -22,7 +22,8 @@ export class OnHarvestCommand extends Command<JalizRoom,
         const player = this.state.players.get(client.sessionId)
         const rewardedCoin = this.rewardCalculation(player.boards[index])
         player.coins += rewardedCoin
-        for (let i = 0; i < player.boards[index].cardCount; i++) {
+        for (let i = 0; i < player.boards[index].cardCount - rewardedCoin; i++) {
+            // TODO could be an option to use cards as coins or not
             this.room.burned_cards.push(player.boards[index].cardId)
         }
         player.boards[index].cardId = 0

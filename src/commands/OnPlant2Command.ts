@@ -55,6 +55,7 @@ export class OnPlant2Command extends Command<JalizRoom,
                 // pick an event
                 // at the end of game, determine the winner
                 if (this.state.remainingRound <= 0) {
+                    // TODO 1 minutes for harvest and plant
                     const winner = allPlayers.sort((a, b) => b.coinsWithUtility() - a.coinsWithUtility())[0]
                     this.state.winner = winner.sessionId
                     this.room.broadcast("news", {"message": `${winner.name} won!`})
