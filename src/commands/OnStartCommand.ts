@@ -26,7 +26,32 @@ export class OnStartCommand extends Command<JalizRoom, {
         this.room.lock()
         logger.info(this.room.roomId, ' start command accepted and locked')
         this.room.board_cards = []
-        for (let i = 7; i < 15; i++) {
+        let start, end
+        switch (this.state.players.size) {
+            case 3:
+                start = 7;
+                end = 15;
+                break
+            case 4:
+                start = 6;
+                end = 15;
+                break
+            case 5:
+                start = 6;
+                end = 16;
+                break
+            case 6:
+                start = 6;
+                end = 17;
+                break
+            case 7:
+                start = 6;
+                end = 18;
+                break
+            default:
+                throw new Error('why players size not in range 3-7')
+        }
+        for (let i = start; i <= end; i++) {
             for (let j = 0; j < i; j++) {
                 this.room.board_cards.push(i);
             }
