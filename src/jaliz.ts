@@ -17,67 +17,67 @@ import {OnDeleteOfferCommand} from "./commands/OnDeleteOfferCommand";
 export const CARD_TYPES = {
     6: {
         'name': 'pepper',
-        'img': '',
+        'img': 'img/6-pepper.jpg',
         'rewards': [2, 0, 4, 0]
     },
     7: {
         'name': 'pea',
-        'img': '',
+        'img': 'img/7-pea.jpg',
         'rewards': [2, 3, 5, 0]
     },
     8: {
         'name': 'eggplant',
-        'img': '',
+        'img': 'img/8-eggplant.jpg',
         'rewards': [2, 4, 5, 0]
     },
     9: {
         'name': 'tomato',
-        'img': '',
+        'img': 'img/9-tomato.jpg',
         'rewards': [2, 4, 0, 6]
     },
     10: {
         'name': 'watermelon',
-        'img': '',
+        'img': 'img/10-watermelon.jpg',
         'rewards': [3, 4, 5, 7]
     },
     11: {
         'name': 'melon',
-        'img': '',
+        'img': 'img/11-melon.jpg',
         'rewards': [3, 5, 6, 7]
     },
     12: {
         'name': 'pumpkin',
-        'img': '',
+        'img': 'img/12-pumpkin.jpg',
         'rewards': [3, 5, 6, 8]
     },
     13: {
         'name': 'turnip',
-        'img': '',
+        'img': 'img/13-turnip.jpg',
         'rewards': [3, 5, 7, 8]
     },
     14: {
         'name': 'carrot',
-        'img': '',
+        'img': 'img/14-carrot.jpg',
         'rewards': [4, 5, 7, 8]
     },
     15: {
         'name': 'bean',
-        'img': '',
+        'img': 'img/15-bean.jpg',
         'rewards': [4, 6, 7, 8]
     },
     16: {
         'name': 'onion',
-        'img': '',
+        'img': 'img/16-onion.jpg',
         'rewards': [4, 6, 7, 9]
     },
     17: {
         'name': 'potato',
-        'img': '',
+        'img': 'img/17-potato.jpg',
         'rewards': [4, 6, 8, 9]
     },
     18: {
         'name': 'cocumber',
-        'img': '',
+        'img': 'img/18-cocumber.jpg',
         'rewards': [4, 6, 8, 10]
     },
 }

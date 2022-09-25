@@ -36,7 +36,7 @@ export class OnPlant2Command extends Command<JalizRoom,
             cards.push(cardId)
         }
         this.removeFromPlayerOfferedAndTradedCards(player, cards)
-        this.room.broadcast('news',{'message':`${player.name} plant ${cardCount} ${cardId} on JALIZ ${index}`})
+        this.room.broadcast('news', {'message': `${player.name} plant ${cardCount} ${cardId} on JALIZ ${index}`})
 
         const allPlayers = Array.from(this.state.players.values());
         // finish the round!
@@ -45,8 +45,9 @@ export class OnPlant2Command extends Command<JalizRoom,
             const boardCards = this.room.getBoardCards()
             currentPlayer.cards.push(boardCards.pop())
             currentPlayer.cards.push(boardCards.pop())
-            currentPlayer.cards.push(boardCards.pop())
-
+            if (this.state.players.size >= 5) {
+                currentPlayer.cards.push(boardCards.pop())
+            }
             const nextIndex = this.room.getNextPlayerIndex()
             this.state.currentTurn = this.state.playersOrder[nextIndex]
             this.state.currentStep = 'plant'
@@ -54,7 +55,7 @@ export class OnPlant2Command extends Command<JalizRoom,
                 // pick an event
                 // at the end of game, determine the winner
                 if (this.state.remainingRound <= 0) {
-                    const winner = allPlayers.sort((a, b) => b.coins - a.coins)[0]
+                    const winner = allPlayers.sort((a, b) => b.coinsWithUtility() - a.coinsWithUtility())[0]
                     this.state.winner = winner.sessionId
                     this.room.broadcast("news", {"message": `${winner.name} won!`})
                     this.room.dispatcher.stop()

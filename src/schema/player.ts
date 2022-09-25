@@ -35,4 +35,8 @@ export class Player extends Schema {
             allCards.filter(y => y === x).length)
     }
 
+    coinsWithUtility() {
+        return this.coins + (this.tractor ? 1 : 0) + (this.boards.length === 3 ? 2 : 0)
+    }
+
 }

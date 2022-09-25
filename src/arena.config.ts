@@ -2,9 +2,8 @@ import Arena from "@colyseus/arena";
 import {monitor} from "@colyseus/monitor";
 import winston from "winston"
 import * as express from "express"
-/**
- * Import your Room files
- */
+import rateLimit from "express-rate-limit";
+import cors from "cors"
 import {JalizRoom} from "./jaliz";
 import * as path from "path";
 
@@ -24,13 +23,25 @@ export default Arena({
     initializeExpress: (app) => {
         const publicDirectoryPath = path.join(__dirname, '../public')
         app.use(express.static(publicDirectoryPath))
-
+        app.use(cors())
         /**
          * Bind @colyseus/monitor
          * It is recommended to protect this route with a password.
          * Read more: https://docs.colyseus.io/tools/monitor/
          */
         app.use("/colyseus", monitor());
+
+        /**
+         * rate limit for match maker
+         */
+        const apiLimiter = rateLimit({
+            windowMs: 15 * 60 * 1000, // 15 minutes
+            max: 100
+        });
+        app.use("/matchmake/", apiLimiter);
+        if (process.env.NODE_ENV == "production") {
+            app.set('trust proxy', 1);
+        }
     },
 
 
