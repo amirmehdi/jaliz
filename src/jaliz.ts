@@ -13,6 +13,7 @@ import {OnStartTradingCommand} from './commands/OnStartTradingCommand';
 import {State} from "./schema/state";
 import {Player} from "./schema/player";
 import {OnDeleteOfferCommand} from "./commands/OnDeleteOfferCommand";
+import {logger} from "./arena.config";
 
 export const CARD_TYPES = {
     6: {
@@ -82,8 +83,13 @@ export const CARD_TYPES = {
     },
 }
 
+export const STAGES = {
+    PLANT: 'plant',
+    TRADE: 'trade',
+    COUNTING: 'counting'
+}
 
-const commands = {
+const GAME_COMMANDS = {
     'start': OnStartCommand,
     'plant': OnPlantCommand,
     'startTrading': OnStartTradingCommand,
@@ -107,10 +113,10 @@ export class JalizRoom extends Room<State> {
 
     onCreate(options: any) {
         this.setState(new State());
-        console.log(this.roomId, 'created')
-        for (const key in commands) {
+        logger.info(`onCreate  room: ${this.roomId}`)
+        for (const key in GAME_COMMANDS) {
             this.onMessage(key, (client, message) => {
-                this.dispatcher.dispatch(new commands[key](), {
+                this.dispatcher.dispatch(new GAME_COMMANDS[key](), {
                     client,
                     ...message
                 })
@@ -122,7 +128,7 @@ export class JalizRoom extends Room<State> {
     }
 
     onJoin(client: Client, options: any, auth: any) {
-        console.log(client.sessionId, ' joined')
+        logger.info(`onJoin client: ${client.sessionId} room: ${this.roomId}`)
         if (!this.owner) {
             this.owner = client.sessionId
         }

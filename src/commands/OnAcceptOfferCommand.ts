@@ -1,12 +1,12 @@
 import {Command} from "@colyseus/command";
 import {Client} from "colyseus";
-import {JalizRoom} from "../jaliz";
+import {JalizRoom, STAGES} from "../jaliz";
 import {Player} from "../schema/player";
 
 export class OnAcceptOfferCommand extends Command<JalizRoom, { client: Client, offerId: string }> {
 
     validate({client, offerId} = this.payload) {
-        if (this.state.currentStep !== "trade") {
+        if (this.state.currentStep !== STAGES.TRADE) {
             client.send('error', {'message': 'this is not trade stage'})
             return false
         }

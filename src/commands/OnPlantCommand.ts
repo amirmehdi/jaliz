@@ -1,17 +1,17 @@
 import {Command} from "@colyseus/command";
 import {Client} from "colyseus";
-import {JalizRoom} from "../jaliz";
+import {JalizRoom, STAGES} from "../jaliz";
 import {OnStartTradingCommand} from "./OnStartTradingCommand";
 
 export class OnPlantCommand extends Command<JalizRoom,
     { client: Client, index: number, cardId: number, cardCount: number }> {
 
     validate({client, index, cardId, cardCount}) {
-        if (this.state.currentStep !== 'plant') {
-            client.send('error', {'message': "this is not plant state"})
+        if (!(this.state.currentStep in [STAGES.PLANT, STAGES.COUNTING])) {
+            client.send('error', {'message': "this is not plant stage"})
             return false
         }
-        if (this.state.currentTurn !== client.sessionId) {
+        if (this.state.currentTurn !== client.sessionId && this.state.currentStep !== STAGES.COUNTING) {
             client.send('error', {'message': 'this is not your turn'})
             return false
         }
@@ -45,8 +45,8 @@ export class OnPlantCommand extends Command<JalizRoom,
             const removeIndex = player.cards.indexOf(cardId)
             player.cards.splice(removeIndex, 1)
         }
-        this.room.broadcast('news',{'message':`${player.name} plant ${cardCount} ${cardId} on JALIZ ${index}`})
-        if (player.plantedCounts >= (player.tractor ? 3 : 2)) {
+        this.room.broadcast('news', {'message': `${player.name} plant ${cardCount} ${cardId} on JALIZ ${index}`})
+        if (this.state.currentStep === STAGES.PLANT && player.plantedCounts >= (player.tractor ? 3 : 2)) {
             this.room.dispatcher.dispatch(new OnStartTradingCommand(), {client})
         }
 

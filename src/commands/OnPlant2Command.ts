@@ -1,7 +1,9 @@
 import {Command} from "@colyseus/command";
 import {Client} from "colyseus";
-import {JalizRoom} from "../jaliz";
+import {JalizRoom, STAGES} from "../jaliz";
 import {Player} from "../schema/player";
+import {OnStartTradingCommand} from "./OnStartTradingCommand";
+import {OnFinishCommand} from "./OnFinishCommand";
 
 export class OnPlant2Command extends Command<JalizRoom,
     { client: Client, index: number, cardId: number, cardCount: number }> {
@@ -49,21 +51,21 @@ export class OnPlant2Command extends Command<JalizRoom,
                 currentPlayer.cards.push(boardCards.pop())
             }
             const nextIndex = this.room.getNextPlayerIndex()
-            this.state.currentTurn = this.state.playersOrder[nextIndex]
-            this.state.currentStep = 'plant'
             if (nextIndex === 0) {
                 // pick an event
                 // at the end of game, determine the winner
                 if (this.state.remainingRound <= 0) {
-                    // TODO 1 minutes for harvest and plant
-                    const winner = allPlayers.sort((a, b) => b.coinsWithUtility() - a.coinsWithUtility())[0]
-                    this.state.winner = winner.sessionId
-                    this.room.broadcast("news", {"message": `${winner.name} won!`})
-                    this.room.dispatcher.stop()
+                    this.state.currentTurn = ''
+                    this.state.currentStep = STAGES.COUNTING
+                    this.clock.setTimeout(() => {
+                        this.room.dispatcher.dispatch(new OnFinishCommand())
+                    }, 60000)
                     return
                 }
             }
-            this.room.broadcast("plant", {
+            this.state.currentTurn = this.state.playersOrder[nextIndex]
+            this.state.currentStep = STAGES.PLANT
+            this.room.broadcast(STAGES.PLANT, {
                 "message": `${this.state.players.get(this.state.currentTurn).name} should plant!`,
                 "sessionId": this.state.currentTurn
             })

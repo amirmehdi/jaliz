@@ -1,6 +1,6 @@
 import {Command} from "@colyseus/command";
 import {Client} from "colyseus";
-import {JalizRoom} from "../jaliz";
+import {JalizRoom, STAGES} from "../jaliz";
 import {shuffle} from "../utils/ArrayUtils";
 import {logger} from "../arena.config";
 import {Garden} from "../schema/garden";
@@ -67,9 +67,9 @@ export class OnStartCommand extends Command<JalizRoom, {
         const playersSessionId = Array.from(this.state.players.keys())
         this.state.playersOrder = shuffle(playersSessionId)
         this.state.currentTurn = this.state.playersOrder[0]
-        this.state.currentStep = 'plant'
+        this.state.currentStep = STAGES.PLANT
         this.room.broadcast("news", {"message": "game started"})
-        this.room.broadcast("plant", {
+        this.room.broadcast(STAGES.PLANT, {
             "message": `${this.state.players.get(this.state.currentTurn).name} should plant!`,
             "sessionId": this.state.currentTurn
         })

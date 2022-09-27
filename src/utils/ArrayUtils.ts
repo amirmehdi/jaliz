@@ -1,7 +1,4 @@
-import {logger} from "../arena.config";
-
 export function shuffle(array) {
-    logger.info('shuffle started')
     let currentIndex = array.length, randomIndex;
 
     // While there remain elements to shuffle.
@@ -15,7 +12,6 @@ export function shuffle(array) {
         [array[currentIndex], array[randomIndex]] = [
             array[randomIndex], array[currentIndex]];
     }
-    logger.info('shuffle ended')
 
     return array;
 }

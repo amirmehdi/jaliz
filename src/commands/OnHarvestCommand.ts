@@ -1,6 +1,7 @@
 import {Command} from "@colyseus/command";
 import {Client} from "colyseus";
 import {CARD_TYPES, JalizRoom} from "../jaliz";
+import {Player} from "../schema/player";
 
 export class OnHarvestCommand extends Command<JalizRoom,
     { client: Client, index: number }> {
@@ -20,6 +21,11 @@ export class OnHarvestCommand extends Command<JalizRoom,
 
     execute({client, index}) {
         const player = this.state.players.get(client.sessionId)
+        this.harvest(player, index);
+
+    }
+
+    public harvest(player: Player, index) {
         const rewardedCoin = this.rewardCalculation(player.boards[index])
         player.coins += rewardedCoin
         for (let i = 0; i < player.boards[index].cardCount - rewardedCoin; i++) {
@@ -32,7 +38,6 @@ export class OnHarvestCommand extends Command<JalizRoom,
             'message': `${player.name} harvest jaliz ${index + 1} and rewarded ${rewardedCoin} coins`,
             'event': 'harvest'
         })
-
     }
 
     rewardCalculation(board): number {
