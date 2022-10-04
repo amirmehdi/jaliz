@@ -7,7 +7,7 @@ export class OnPlantCommand extends Command<JalizRoom,
     { client: Client, index: number, cardId: number, cardCount: number }> {
 
     validate({client, index, cardId, cardCount}) {
-        if (!(this.state.currentStep in [STAGES.PLANT, STAGES.COUNTING])) {
+        if (!(this.state.currentStep === STAGES.PLANT || this.state.currentStep === STAGES.COUNTING)) {
             client.send('error', {'message': "this is not plant stage"})
             return false
         }
